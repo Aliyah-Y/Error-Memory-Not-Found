@@ -239,7 +239,7 @@ function clearLayer() {
     dialogueBox.style.display = "none";
     choicesWrap.innerHTML = "";
     choicesWrap.style.display = "none";
-    lockedNext();
+    lockNext();
     nextButton.style.display = "none";
 }
 
@@ -379,7 +379,7 @@ function createSticky(noteData, stickyImg, onReveal) {
 
     function lockNext() {
         nextButton.disabled = true;
-        nextButton.onClick = null;
+        nextButton.onclick = null;
     }
 
     function unlockNext(handler) {
@@ -403,8 +403,8 @@ function sceneRoom(day) {
     }
 
     setBackground(data.bgRoom);
-    createFamilyPhoto(data.familyPhoto);
     clearLayer();
+    createFamilyPhoto(data.familyPhoto);
     clearCountdown();
     dialogueBox.innerHTML = "";
     nextButton.style.display = "none";
@@ -442,7 +442,6 @@ function sceneRoom(day) {
         });
         // penalize memory for not revealing in time
         setMemory(memory - 15);
-        nextButton.style.display = "inline-block";
         unlockNext (() => {
             advanceTime(30);
             sceneFriends(day);
@@ -455,7 +454,6 @@ function sceneRoom(day) {
             clicked++;
             if (clicked >= required) {
                 clearCountdown();
-                nextButton.style.display = "inline-block";
                 unlockNext(() => {
                     advanceTime(30);
                     sceneFriends(day);
@@ -494,8 +492,7 @@ function sceneFriends(day) {
     if (data.choices && data.choices.length) {
         showChoices(data.choices, day, (choice) => {
             dialogueBox.innerText = choice.result;
-            nextButton.disabled = false;
-            setNextHandler(() => {
+            unlockNext(() => {
                 advanceTime(45);
                 sceneDate(day);
             });
