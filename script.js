@@ -45,7 +45,7 @@ const gameData = {
             { text: "Check your phone for clues about your past.", x: "70%", y: "45%", w: "130px", h: "130px" }
         ],
         friendsDialogue: [
-            { text: "Hey, how are you doing?",  x: "90%", y: "35%" }, 
+            "Hey, how are you doing?", 
         ],
         dateDialogue: [
             "He smiles at you warmly. 'It's so good to see you again,' he says.",
@@ -56,8 +56,8 @@ const gameData = {
         ],
         familyPhoto: {
             src: "assets/day-1/family-photo-1.png",
-            x: "25%",
-            y: "70%",
+            x: "80%",
+            y: "30%",
             w: "150px",
             h: "100px",
         }
@@ -86,8 +86,8 @@ const gameData = {
         ],
         familyPhoto: {
             src: "assets/day-2/family-photo-2.png",
-            x: "25%",
-            y: "70%",
+            x: "80%",
+            y: "30%",
             w: "150px",
             h: "100px",
         }
@@ -116,8 +116,8 @@ const gameData = {
         ],
         familyPhoto: {
             src: "assets/day-3/family-photo-3.png",
-            x: "25%",
-            y: "70%",
+            x: "80%",
+            y: "30%",
             w: "150px",
             h: "100px",
         }
@@ -146,8 +146,8 @@ const gameData = {
         ],
         familyPhoto: {
             src: "assets/day-4/family-photo-4.png",
-            x: "25%",
-            y: "70%",
+            x: "80%",
+            y: "30%",
             w: "150px",
             h: "100px",
         }
@@ -176,8 +176,8 @@ const gameData = {
         ],
         familyPhoto: {
             src: "assets/day-5/family-photo-5.png",
-            x: "25%",
-            y: "70%",
+            x: "80%",
+            y: "30%",
             w: "150px",
             h: "100px",
         }
@@ -404,7 +404,7 @@ function sceneRoom(day) {
     let clicked = 0;
 
     // countdown starts and if time runs out, then all sticky notes are revealed and player gets memory penalized
-    const roomTimer = 25; // seconds
+    const roomTimer = 10; // seconds
     startCountdown(roomTimer, null, () => {
         // this means the timer ended and all unrevealed notes are revealed
         const notes = Array.from(layer.querySelectorAll(".sticky"));
@@ -445,7 +445,7 @@ function sceneRoom(day) {
             if (clicked >= required) {
                 clearCountdown();
                 unlockNext(() => {
-                    advanceTime(30);
+                    advanceTime(60);
                     sceneFriends(day);
                 });
             }
