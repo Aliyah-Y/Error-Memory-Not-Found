@@ -5,7 +5,7 @@
 let day = 1;
 let memory = 100;
 
-const nextButton = document.getElementById('next-Button');
+const nextButton = document.getElementById('next-button');
 const dialogueBox = document.getElementById('dialogue-box');
 const layer = document.getElementById('interactive-layer');
 const background = document.getElementById('background');
@@ -127,8 +127,16 @@ function sceneRoom(day) {
     notes.forEach((text, index) => {
         const note = document.createElement("div");
         note.className = "sticky";
-        note.style.left = (100 + index * 200) + "px";
-        note.style.top = "200px";
+        
+        // in order to make it responsive to window size
+        const noteWidth = 140; 
+        const noteHeight = 140;
+        const spacing = 20;
+        const startX = window.innerWidth * 0.1; 
+        const startY = window.innerHeight * 0.3; 
+        
+        note.style.left = (startX + index * (noteWidth + spacing)) + "px";
+        note.style.top = startY + "px";
         note.innerText = "???";
 
         note.onclick = () => {

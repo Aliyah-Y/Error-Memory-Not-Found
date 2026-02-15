@@ -18,12 +18,15 @@ body {
     object-fit: contain;
     position: absolute;
     background-color: black;
+    pointer-events: none;
+    z-index: 1;
 }
 
 #interactive-layer {
     position:absolute;
     width: 100%;
     height: 100%;
+    z-index: 10;
 }
 
 .sticky {
@@ -35,6 +38,13 @@ body {
     padding: 10px;
     cursor: pointer;
     border: 2px solid rgb(57, 56, 56);
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    user-select: none;
 }
 
 #dialogue-box {
@@ -47,6 +57,7 @@ body {
     padding: 20px;
     border-radius: 10px;
     font-size: 20px;
+    z-index: 20;
 }
 
 #next-button {
@@ -57,6 +68,8 @@ body {
     font-size: 18px;
     cursor: pointer;
     color:aliceblue;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.8);
     border:rgb(57, 56, 56) solid 2px;
 }
 
