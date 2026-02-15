@@ -512,9 +512,9 @@ function sceneRoom(day) {
     dialogueBox.innerText = data.dateDialogue[index] || "";
 
     // show interactive choices
-    showChoices(date.choices, day, (choice) => {
+    showChoices(data.choices, day, (choice) => {
         dialogueBox.innerText = choice.result 
-        setMemory(memory - 5);
+        setMemory(memory - 8);
 
         unlockNext(() => {
         if (day < 5) {
@@ -536,7 +536,7 @@ function sceneRoom(day) {
 function reflectionScreen() {
     clearLayer();
     dialogueBox.style.display = "block";
-    unlockNext(finalPage);
+    
     dialogueBox.innerHTML = `
     <h2>Reflection</h2>
     <p>What did your friend say on Day 2?</p>
@@ -545,6 +545,7 @@ function reflectionScreen() {
     `;    
     nextButton.style.display = "inline-block";
     clearCountdown();
+    unlockNext(finalPage);
 }
 
 // ------------
