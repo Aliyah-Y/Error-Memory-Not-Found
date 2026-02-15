@@ -142,20 +142,11 @@ const gameData = {
         stickyImg: "assets/day-4/sticky-note-4.png",
         roomNotes: [
             { text: "Your room is messy and disorganized, reflecting the chaos in your mind.", 
-                x: "10%", 
-                y: "30%", 
-                w: "120px", 
-                h: "120px" },
+                x: "10%", y: "30%", w: "120px", h: "120px" },
             { text: "You find a note in your journal: 'The truth is hidden in plain sight.'", 
-                x: "45%", 
-                y: "45%", 
-                w: "140px", 
-                h: "140px" },
+                x: "45%", y: "45%", w: "140px", h: "140px" },
             { text: "You see a calendar with important dates circled, but you can't remember why.", 
-                x: "75%", 
-                y: "65%", 
-                w: "130px", 
-                h: "130px" }
+                x: "75%", y: "65%", w: "130px", h: "130px" }
         ],
         friendsDialogue: [
             "Your friends show you photos of past events, but the faces are blurred and unrecognizable.",
@@ -411,7 +402,7 @@ function sceneRoom(day) {
     let clicked = 0;
 
     // countdown starts and if time runs out, then all sticky notes are revealed and player gets memory penalized
-    const roomTimer = 5; // seconds
+    const roomTimer = 10; // seconds
     startCountdown(roomTimer, null, () => {
         // this means the timer ended and all unrevealed notes are revealed
         const notes = Array.from(layer.querySelectorAll(".sticky"));
@@ -438,7 +429,7 @@ function sceneRoom(day) {
             }
         });
         // penalize memory for not revealing in time
-        setMemory(memory - 20);
+        setMemory(memory - 10);
         unlockNext (() => {
             advanceTime(30);
             sceneFriends(day);
@@ -472,11 +463,11 @@ function sceneRoom(day) {
         return;
     }
 
-        setBackground(data.bgFriends);
-        clearLayer();
-        clearCountdown();
-        lockNext();
-        nextButton.style.display = "inline-block";
+    setBackground(data.bgFriends);
+    clearLayer();
+    clearCountdown();
+    lockNext();
+    nextButton.style.display = "inline-block";
     }
 
     // place friend character 
@@ -550,7 +541,7 @@ function reflectionScreen() {
     <p>What did your date order on Day 4?</p>
     <p>What note was there on your bed on Day 3?</p>
     `;    
-    unlockNext();
+    nextButton.style.display = "inline-block";
     clearCountdown();
 }
 
