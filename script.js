@@ -372,10 +372,12 @@ function createSticky(noteData, stickyImg, onReveal) {
         nextButton.onclick = null;
     }
 
-    function unlockNext(handler) { 
-        nextButton.style.display = "inline-block"; 
-        nextButton.disabled = false; 
-        setNextHandler(handler); }
+    function unlockNext(handler) {
+        nextButton.style.display = "inline-block";
+        nextButton.disabled = false;
+        setNextHandler(handler);
+    }
+
 
 // ------------
 // SCENES! :)
@@ -516,23 +518,25 @@ function sceneRoom(day) {
     clearLayer();
     clearCountdown();
 
-    // place date character
+    // place date character with sensible coordinates so it stays on screen
     addCharacter(data.dateCharacter, "70%", "85%", "160px");
 
     let index = 0;
     dialogueBox.style.display = "block";
     dialogueBox.innerText = data.dateDialogue[index] || "";
 
-    // date choices (always enabled; no locking)
+    // local date choices (always enabled)
     const dateChoices = [
         { text: "Say I remember you", result: "You try to say it but no words come out." },
-        { text: "Ask about us", result: "They look pained and explain slowly." }
+        { text: "Ask about us", result: "They look pained as though he wants to avoid the topic. He speaks slowly." }
     ];
 
+    // show interactive choices
     showChoices(dateChoices, day, (choice) => {
+        // guard against non-string results
         dialogueBox.innerText = (typeof choice.result === "string") ? choice.result : String(choice.result);
-        // small memory cost for engaging
         setMemory(memory - 5);
+        // ensure Next is visible and will advance the day
         unlockNext(() => {
         if (day < 5) {
             currentDay = day + 1;
@@ -545,6 +549,7 @@ function sceneRoom(day) {
     });
 
     // allow skipping through the date dialogue with Next
+    // ensure Next is visible for this path as well
     unlockNext(() => {
         setMemory(memory - 10);
         index++;
