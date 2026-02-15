@@ -1,4 +1,4 @@
-// heyyy welcome to javascript, i'm your mannn :p
+// heyyy welcome to javascript, i'm your man :p
 
 // -----------------------------
 // GLOBAL VARIABLES / SELECTORS
@@ -260,18 +260,23 @@ function startCountdown(seconds, onTick, onEnd) {
         countdownEL.innerText = "0";
         onEnd && onEnd();
         return;
-    } else if (s <= 3) {
-    countdownEL.style.transform = "scale(1.2)";
-    } else {
-    countdownEL.style.transform = "scale(1)";
+    } 
     
-    }
     let s = seconds;
     countdownEL.innerText = s;
+
     timerId = setInterval(() => {
         s--;
+
+    if (s <= 3) {
+        countdownEL.style.transform = "scale(1.2)";
+    } else {
+        countdownEL.style.transform = "scale(1)";
+    }
+
         countdownEL.innerText = s;
         onTick && onTick(s);
+
         if (s <= 0) {
             clearCountdown();
             onEnd && onEnd();
@@ -283,8 +288,9 @@ function clearCountdown() {
     if (timerId) {
         clearInterval(timerId);
         timerId = null;
-        countdownEL.innerText = "";
-    }
+   }
+   countdownEL.innerText = "";
+   countdownEL.style.transform = "sclae(1)";
 }
 
 function startSceneTimer(seconds, onEnd) {
