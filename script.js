@@ -260,6 +260,11 @@ function startCountdown(seconds, onTick, onEnd) {
         countdownEL.innerText = "0";
         onEnd && onEnd();
         return;
+    } else if (s <= 3) {
+    countdownEL.style.transform = "scale(1.2)";
+    } else {
+    countdownEL.style.transform = "scale(1)";
+    
     }
     let s = seconds;
     countdownEL.innerText = s;
@@ -278,7 +283,19 @@ function clearCountdown() {
     if (timerId) {
         clearInterval(timerId);
         timerId = null;
+        countdownEL.innerText = "";
     }
+}
+
+function startSceneTimer(seconds, onEnd) {
+    clearCountdown();              // always stop previous timer
+    startCountdown(
+        seconds,
+        null,
+        () => {
+            onEnd && onEnd();
+        }
+    );
 }
 
 // ----------------------------------------
@@ -403,7 +420,7 @@ function sceneRoom(day) {
 
     // countdown starts and if time runs out, then all sticky notes are revealed and player gets memory penalized
     const roomTimer = 10; // seconds
-    startCountdown(roomTimer, null, () => {
+    startSceneTimer(roomTimer, () => {
         // this means the timer ended and all unrevealed notes are revealed
         const notes = Array.from(layer.querySelectorAll(".sticky"));
         notes.forEach((note, idx) => {
@@ -467,7 +484,17 @@ function sceneRoom(day) {
     clearLayer();
     clearCountdown();
     lockNext();
-    nextButton.style.display = "inline-block";
+    
+    startSceneTimer(8, () => {
+    // player took too long
+    setMemory(memory - 5);
+
+    unlockNext(() => {
+        advanceTime(45);
+        sceneDate(day);
+     });
+    });
+
     
 
     // place friend character 
@@ -503,6 +530,21 @@ function sceneRoom(day) {
     setBackground(data.bgDate);
     clearLayer();
     clearCountdown();
+    
+    startSceneTimer(8, () => {
+    setMemory(memory - 8);
+
+    unlockNext(() => {
+        if (day < 5) {
+            currentDay = day + 1;
+            advanceTime(60 * 12);
+            sceneRoom(currentDay);
+        } else {
+            reflectionScreen();
+        }
+    });
+});
+
 
     // place date character with sensible coordinates so it stays on screen
     addCharacter(data.dateCharacter, "70%", "85%", "160px");

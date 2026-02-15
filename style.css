@@ -80,6 +80,7 @@ body {
     padding: 6px 12px;
     border-radius: 6px;
     font-weight: 800;
+    transition: transform 0.2s ease;
 }
 #timer-label {
     opacity: 0.9;
