@@ -45,12 +45,10 @@ const gameData = {
             { text: "Check your phone for clues about your past.", x: "70%", y: "45%", w: "130px", h: "130px" }
         ],
         friendsDialogue: [
-            "Hey, how are you doing?", 
-            "Remember last semester at the beach? We had so much fun!"
+            { text: "Hey, how are you doing?",  x: "90%", y: "35%" }, 
         ],
         dateDialogue: [
             "He smiles at you warmly. 'It's so good to see you again,' he says.",
-            "You feel a strange sense of familiarity with him, but don't quite know why."
         ],
         choices: [
             { text: "Ask about the accident", result: "surprised and explain gently.", availableFromDay: 1 }, 
@@ -78,11 +76,9 @@ const gameData = {
         ],
         friendsDialogue: [
             "Your friends look at you with concern.", 
-            "You can't remember the joke they told you yesterday."
         ],
         dateDialogue: [
-            "He orders your favorite meal.",
-            "You don't remember ever enjoying it."
+            "He orders your favorite meal. You don't remember ever enjoying it."
         ],
         choices: [
             { text: "Ask if they're worried", result: "They say they are only trying to help.", availableFromDay: 1 }, 
@@ -109,11 +105,9 @@ const gameData = {
             { text: "You find a note on your bedside table: 'Don't forget who you are.'", x: "70%", y: "65%", w: "130px", h: "130px" }
         ],
         friendsDialogue: [
-            "Your friends are trying to jog your memory.",
             "They mention a trip you took together, but you can't recall it."
         ],
         dateDialogue: [
-            "He takes you to a place you used to love, but now it feels alien.",
             "You struggle to connect with him, even though you know he's important to you."
         ],
         choices: [
@@ -142,11 +136,9 @@ const gameData = {
         ],
         friendsDialogue: [
             "Your friends show you photos of past events, but the faces are blurred and unrecognizable.",
-            "They talk about inside jokes and shared experiences, but you can't recall any of them."
         ],
         dateDialogue: [
             "He looks at you with a mix of sadness and frustration. 'I don't know how to help you,' he says.",
-            "You feel a deep sense of loss and isolation, 'What's wrong with me?' you think to yourself."
         ],
         choices: [
             { text: "Try to explain", result: "Words fail you; they look worried.", availableFromDay: 1 }, 
@@ -173,12 +165,10 @@ const gameData = {
             { text: "You look outside and see the sun setting, signaling the end of another day, and perhaps the end of your memories as well.", x: "75%", y: "65%", w: "130px", h: "130px" }
         ],
         friendsDialogue: [
-            "Your friends have stopped trying to reach out to you, their faces now just distant memories.",
-            "They're angry at you for not remembering them, remembering their names or how you met them."
+            "Your friends have stopped trying to reach out to you, they're angry at you for not remembering them, remembering their names or how you met them."
         ],
         dateDialogue: [
             "You observe him from a distance, feeling a deep sense of loss and longing.",
-            "You can't remember the last time you were truly happy together."
         ],
         choices: [
             { text: "Try to reach out", result: "They don't recognize you anymore.", availableFromDay: 1 }, 
@@ -441,7 +431,7 @@ function sceneRoom(day) {
             }
         });
         // penalize memory for not revealing in time
-        setMemory(memory - 15);
+        setMemory(memory - 10);
         unlockNext (() => {
             advanceTime(30);
             sceneFriends(day);
@@ -527,7 +517,7 @@ function sceneDate(day) {
     clearCountdown();
 
     // add the date character to the screen
-    addCharacter(data.dateCharacter, "70%", "60%", "160px");
+    addCharacter(data.dateCharacter, "2000%", "1000%", "500px");
 
     let index = 0;
     dialogueBox.style.display = "block";
@@ -536,7 +526,7 @@ function sceneDate(day) {
     const lockedOnLateDays = day >= 4;
     const dataChoices = [
         { text: "Say I remember you", result: "You try to say it but no words come out.", availableFromDay: 1 },
-        { text: "Ask about us", result: "They look pained as though he wants to avoid the topic. He speaks slowly.", availableFromDay: 1 }
+        { text: "Ask about us", result: "They look pained as though he wants to avoid the topic. He speaks slowly.", availableFromDay: 4 }
     ];
 
     if (lockedOnLateDays) {
@@ -544,7 +534,7 @@ function sceneDate(day) {
         showChoices(dataChoices.map(c => ({ ...c, availableFromDay: day + 1 })), day, null);
         dialogueBox.innerText = data.dateDialogue.join(" ");
         unlockNext(() => {
-            setMemory(memory - 15);
+            setMemory(memory - 10);
             if (day < 5) {
                 currentDay = day + 1;
                 advanceTime(60 * 12);
@@ -571,7 +561,7 @@ function sceneDate(day) {
 
         // allow skipping through the date dialogue
         unlockNext(() => {
-            setMemory(memory - 20);
+            setMemory(memory - 10);
             index++;
             if (index < data.dateDialogue.length) {
                 dialogueBox.innerText = data.dateDialogue[index];
@@ -594,15 +584,15 @@ function sceneDate(day) {
 // ------------------
 
 function reflectionScreen() {
-    setBackground("");
     clearLayer();
     dialogueBox.style.display = "block";
     dialogueBox.innerHTML = `
-    <h2>Reflection - Questions</h2>
+    <h2>Reflection</h2>
     <p>What did your friend say on Day 2?</p>
     <p>What did your date order on Day 4?</p>
+    <p>What note was there on your bed on Day 3?</p>
     `;    
-    nextButton.style.display = "none";
+    nextButton.style.display = "inline-block";
     clearCountdown();
 }
 
@@ -610,9 +600,8 @@ function reflectionScreen() {
 // FINAL PAGE
 // ------------
 function finalPage() {
-    setBackground("");
     clearLayer();
-    nextButton.style.display = "none";
+    nextButton.style.display = "inline-block";
     dialogueBox.innerHTML = `
     <h2>Final Page</h2>
     <p>As your memory fades, you start to question the nature of your reality. Are these people truly your friends and loved ones, or just figments of a fading memory?</p> 
