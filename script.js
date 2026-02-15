@@ -24,7 +24,7 @@ const memoryPercent = document.getElementById('memory-percent');
 
 let currentDay = 1;
 let memory = 100;
-let gameTimeMinutes = 8 * 60; // 8 hours in minutes i.e., 8:00 AM
+let gameTimeMinutes = 10 * 60; // 8 hours in minutes i.e., 8:00 AM
 let currentScene = 1; // so the room is scene 1, friends is scene 2, date is scene 3
 let timerId = null;
 
@@ -372,11 +372,10 @@ function createSticky(noteData, stickyImg, onReveal) {
         nextButton.onclick = null;
     }
 
-    function unlockNext(handler) {
-        nextButton.style.display = "inline-block";
-        nextButton.disabled = false;
-        setNextHandler(handler);
-    }
+    function unlockNext(handler) { 
+        nextButton.style.display = "inline-block"; 
+        nextButton.disabled = false; 
+        setNextHandler(handler); }
 
 // ------------
 // SCENES! :)
@@ -457,54 +456,55 @@ function sceneRoom(day) {
 }
 
 // SCENE 2 - FRIENDS / SCHOOL
-function sceneFriends(day) {
+    function sceneFriends(day) {
     currentScene = 2;
     const data = gameData[day];
     if (!data) {
         console.error('No data for day', day);
         return;
     }
-    
+
     setBackground(data.bgFriends);
     clearLayer();
     clearCountdown();
     lockNext();
     nextButton.style.display = "inline-block";
 
-    // add the friend character to the screen
-    addCharacter(data.friendCharacter, "20%", "60%", "160px");
+    // place friend character 
+    addCharacter(data.friendCharacter, "70%", "85%", "160px");
 
     let index = 0;
     dialogueBox.style.display = "block";
     dialogueBox.innerText = data.friendsDialogue[index] || "";
 
-    // show choices (some may be locked)
+    // show choices (always enabled; no locking)
     if (data.choices && data.choices.length) {
         showChoices(data.choices, day, (choice) => {
-            dialogueBox.innerText = choice.result;
-            unlockNext(() => {
-                advanceTime(45);
-                sceneDate(day);
-            });
+        // guard against non-string results b/c before it was saying [object] ????
+        dialogueBox.innerText = (typeof choice.result === "string") ? choice.result : String(choice.result);
+        
+        // enable Next to move on after a choice
+        unlockNext(() => {
+            advanceTime(45);
+            sceneDate(day);
+        });
         });
     }
-
-    // allow player to progress through dialogue
+    // Next also advances through dialogue lines if player doesn't choose
     unlockNext(() => {
         index++;
         if (index < data.friendsDialogue.length) {
-            dialogueBox.innerText = data.friendsDialogue[index];
+        dialogueBox.innerText = data.friendsDialogue[index];
         } else {
-            advanceTime(45);
-            sceneDate(day);
+        advanceTime(45);
+        sceneDate(day);
         }
     });
-}
+    }
+
 
 // SCENE 3 - DATE + MEMORY DECREASE
-
-function sceneDate(day) {
-    
+    function sceneDate(day) {
     currentScene = 3;
     const data = gameData[day];
     if (!data) {
@@ -516,44 +516,50 @@ function sceneDate(day) {
     clearLayer();
     clearCountdown();
 
-    // add the date character to the screen
-    addCharacter(data.dateCharacter, "2000%", "1000%", "500px");
+    // place date character
+    addCharacter(data.dateCharacter, "70%", "85%", "160px");
 
     let index = 0;
     dialogueBox.style.display = "block";
     dialogueBox.innerText = data.dateDialogue[index] || "";
-    
-    // normal interactive date scene with choices
-        showChoices(dataChoices, day, (choice) => {
-        dialogueBox.innerText = choice.result;
-           setMemory(memory - 5);
-           unlockNext(() => {
-                if (day < 5) {
-                    currentDay = day + 1;
-                    advanceTime(60 * 12);
-                    sceneRoom(currentDay);
-                } else {
-                    reflectionScreen();
-                }
-            });
-        });
 
-        // allow skipping through the date dialogue
+    // date choices (always enabled; no locking)
+    const dateChoices = [
+        { text: "Say I remember you", result: "You try to say it but no words come out." },
+        { text: "Ask about us", result: "They look pained and explain slowly." }
+    ];
+
+    showChoices(dateChoices, day, (choice) => {
+        dialogueBox.innerText = (typeof choice.result === "string") ? choice.result : String(choice.result);
+        // small memory cost for engaging
+        setMemory(memory - 5);
         unlockNext(() => {
-            setMemory(memory - 10);
-            index++;
-            if (index < data.dateDialogue.length) {
-                dialogueBox.innerText = data.dateDialogue[index];
-            } else {
-                if (day < 5) {
-                    currentDay = day + 1;
-                    advanceTime(60 * 12);
-                    sceneRoom(currentDay);
-                } else {
-                    reflectionScreen();
-                }
-            }
+        if (day < 5) {
+            currentDay = day + 1;
+            advanceTime(60 * 12);
+            sceneRoom(currentDay);
+        } else {
+            reflectionScreen();
+        }
         });
+    });
+
+    // allow skipping through the date dialogue with Next
+    unlockNext(() => {
+        setMemory(memory - 10);
+        index++;
+        if (index < data.dateDialogue.length) {
+        dialogueBox.innerText = data.dateDialogue[index];
+        } else {
+        if (day < 5) {
+            currentDay = day + 1;
+            advanceTime(60 * 12);
+            sceneRoom(currentDay);
+        } else {
+            reflectionScreen();
+        }
+        }
+    });
     }
 
 // ------------------
@@ -598,7 +604,7 @@ function startGame() {
 
     currentDay = 1;
     setMemory(100);
-    gameTimeMinutes = 8 * 60;
+    gameTimeMinutes = 10 * 60;
 
     dayLabel.innerText = "Day " + currentDay;
     timeLabel.innerText = minutestoHHMM(gameTimeMinutes);
