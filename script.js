@@ -1,3 +1,5 @@
+// heyyy welcome to javascript, i'm your mannn :p
+
 // -----------------------------
 // GLOBAL VARIABLES / SELECTORS
 // -----------------------------
@@ -24,7 +26,7 @@ const memoryPercent = document.getElementById('memory-percent');
 
 let currentDay = 1;
 let memory = 100;
-let gameTimeMinutes = 10 * 60; // 8 hours in minutes i.e., 8:00 AM
+let gameTimeMinutes = 10 * 60; // 
 let currentScene = 1; // so the room is scene 1, friends is scene 2, date is scene 3
 let timerId = null;
 
@@ -40,9 +42,12 @@ const gameData = {
         dateCharacter: "assets/day-1/date-char-1.png",
         stickyImg: "assets/day-1/sticky-note-1.png",
         roomNotes: [
-            { text: "You got into a car accident and woke up in your bed.", x: "12%", y: "40%", w: "120px", h: "120px" },
-            { text: "It seems that your memory resets every day.", x: "40%", y: "35%", w: "140px", h: "140px" },
-            { text: "Check your phone for clues about your past.", x: "70%", y: "45%", w: "130px", h: "130px" }
+            { text: "You got into a car accident and woke up in your bed.", 
+                x: "12%", y: "40%", w: "120px", h: "120px" },
+            { text: "It seems that your memory resets every day.", 
+                x: "40%", y: "35%", w: "140px", h: "140px" },
+            { text: "Check your phone for clues about your past.", 
+                x: "70%", y: "45%", w: "130px", h: "130px" }
         ],
         friendsDialogue: [
             "Hey, how are you doing?", 
@@ -70,9 +75,12 @@ const gameData = {
         dateCharacter: "assets/day-2/date-char-2.png",
         stickyImg: "assets/day-2/sticky-note-2.png",
         roomNotes: [
-            { text: "You woke up confused again in your bed.", x: "14%", y: "20%", w: "120px", h: "120px" },
-            { text: "Your phone illuminates the dark room.", x: "50%", y: "35%", w: "140px", h: "140px" },
-            { text: "Don't trust your memory.", x: "75%", y: "60%", w: "130px", h: "130px" }
+            { text: "You woke up confused again in your bed.", 
+                x: "14%", y: "20%", w: "120px", h: "120px" },
+            { text: "Your phone illuminates the dark room.", 
+                x: "50%", y: "35%", w: "140px", h: "140px" },
+            { text: "Don't trust your memory.", 
+                x: "75%", y: "60%", w: "130px", h: "130px" }
         ],
         friendsDialogue: [
             "Your friends look at you with concern.", 
@@ -100,9 +108,12 @@ const gameData = {
         dateCharacter: "assets/day-3/date-char-3.png",
         stickyImg: "assets/day-3/sticky-note-3.png",
         roomNotes: [
-            { text: "You wake up to a blistering headache.", x: "12%", y: "40%", w: "120px", h: "120px" },
-            { text: "Your room feels unfamiliar, yet strangely comforting.", x: "40%", y: "35%", w: "140px", h: "140px" },
-            { text: "You find a note on your bedside table: 'Don't forget who you are.'", x: "70%", y: "65%", w: "130px", h: "130px" }
+            { text: "You wake up to a blistering headache.", 
+                x: "12%", y: "40%", w: "120px", h: "120px" },
+            { text: "Your room feels unfamiliar, yet strangely comforting.", 
+                x: "40%", y: "35%", w: "140px", h: "140px" },
+            { text: "You find a note on your bedside table: 'Don't forget who you are.'", 
+                x: "70%", y: "65%", w: "130px", h: "130px" }
         ],
         friendsDialogue: [
             "They mention a trip you took together, but you can't recall it."
@@ -172,9 +183,12 @@ const gameData = {
         dateCharacter: "assets/day-5/date-char-5.png",
         stickyImg: "assets/day-5/sticky-note-5.png",
         roomNotes: [
-            { text: "Your room is empty and sterile, anything that was once familiar is gone.", x: "10%", y: "30%", w: "120px", h: "120px" },
-            { text: "You find a note on the wall: 'The end is near.'", x: "45%", y: "45%", w: "140px", h: "140px" },
-            { text: "You look outside and see the sun setting, signaling the end of another day, and perhaps the end of your memories as well.", x: "75%", y: "65%", w: "130px", h: "130px" }
+            { text: "Your room is empty and sterile, anything that was once familiar is gone.", 
+                x: "10%", y: "30%", w: "120px", h: "120px" },
+            { text: "You find a note on the wall: 'The end is near.'", 
+                x: "45%", y: "45%", w: "140px", h: "140px" },
+            { text: "You look outside and see the sun setting, signaling the end of another day, and perhaps the end of your memories as well.", 
+                x: "75%", y: "65%", w: "130px", h: "130px" }
         ],
         friendsDialogue: [
             "Your friends have stopped trying to reach out to you, they're angry at you for not remembering them, remembering their names or how you met them."
@@ -397,7 +411,7 @@ function sceneRoom(day) {
     let clicked = 0;
 
     // countdown starts and if time runs out, then all sticky notes are revealed and player gets memory penalized
-    const roomTimer = 10; // seconds
+    const roomTimer = 5; // seconds
     startCountdown(roomTimer, null, () => {
         // this means the timer ended and all unrevealed notes are revealed
         const notes = Array.from(layer.querySelectorAll(".sticky"));
@@ -424,7 +438,7 @@ function sceneRoom(day) {
             }
         });
         // penalize memory for not revealing in time
-        setMemory(memory - 10);
+        setMemory(memory - 20);
         unlockNext (() => {
             advanceTime(30);
             sceneFriends(day);
@@ -458,11 +472,11 @@ function sceneRoom(day) {
         return;
     }
 
-    setBackground(data.bgFriends);
-    clearLayer();
-    clearCountdown();
-    lockNext();
-    nextButton.style.display = "inline-block";
+        setBackground(data.bgFriends);
+        clearLayer();
+        clearCountdown();
+        lockNext();
+        nextButton.style.display = "inline-block";
     }
 
     // place friend character 
@@ -536,7 +550,7 @@ function reflectionScreen() {
     <p>What did your date order on Day 4?</p>
     <p>What note was there on your bed on Day 3?</p>
     `;    
-    nextButton.style.display = "inline-block";
+    unlockNext();
     clearCountdown();
 }
 
