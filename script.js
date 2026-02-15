@@ -51,7 +51,7 @@ const gameData = {
             "He smiles at you warmly. 'It's so good to see you again,' he says.",
         ],
         choices: [
-            { text: "Ask about the accident", result: "surprised and explain gently.", availableFromDay: 1 }, 
+            { text: "Ask about the accident", result: "Your friends look at you surprised but explain gently.", availableFromDay: 1 }, 
             { text: "Change the subject", result: "You laugh it off; they seem relieved.", availableFromDay: 1 }
         ],
         familyPhoto: {
@@ -526,7 +526,7 @@ function sceneDate(day) {
     // normal interactive date scene with choices
         showChoices(dataChoices, day, (choice) => {
         dialogueBox.innerText = choice.result;
-           setMemory(memory - 10);
+           setMemory(memory - 5);
            unlockNext(() => {
                 if (day < 5) {
                     currentDay = day + 1;
