@@ -45,8 +45,205 @@ body {
     font-weight: 700
 }
 
+/* header display */
+#header-display {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    pointer-events: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 60;
+}
+#day-time {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    pointer-events: auto;
+}
+#day-label, #time-label {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+#timer-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: auto;
+}
+#countdown {
+    background: #111;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 800;
+}
+#timer-label {
+    opacity: 0.9;
+}
 
+/* memory panel */
+#memory-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    pointer-events:auto
+}
+#memory-bar {
+    width: 220px;
+    height: 12px;
+    background: linear-gradient(90deg,var(--accent),#0a391d);
+    border-radius: 8px;
+    transition: width 0.4s, background 0.4s;
+}
+#memory-percent {
+    min-width: 44px;
+    text-align: right;
+    font-size: 13px;
+    opacity:0.95
+}
 
+/* stage display */
+#stage {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px 60px;
+    height: calc(100vh - 120px)
+}
+#stage-frame {
+    background:#050505;
+    border: 6px solid rgba(255,255,255,0.03);
+    border-radius: 14px;
+    padding:36px; 
+    width: min(1200px,86vw);
+    height: min(720px,72vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow:hidden;
+    box-shadow:0 8px 30px rgba(0,0,0,0.6)
+}
+#background{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    object-fit: contain;
+    max-width: calc(100% - 40px);
+    max-height: calc(100% - 40px);
+    pointer-events: none;
+    z-index: 1
+}
+#interactive-layer{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10
+}
+/* the sticky notes! */
+.sticky {
+    position:absolute;
+    background: var(--warn);
+    color: #000;
+    border: 2px solid #333;
+    padding: 8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    cursor:pointer;
+    user-select:none;
+    font-weight:700;
+    box-shadow:0 6px 12px rgba(0,0,0,0.35);
+    transition:transform 0.12s ease,opacity 0.12s
+}
+.sticky:active{
+    transform:translateY(2px) scale(0.995)
+}
+.sticky.img {
+    background-size:cover;
+    background-position:center;
+    color:transparent;
+    font-weight:400
+}
+/* user interface panel -- 
+for when you actually want to do stuff with the game... */
+#ui-panel {
+    width: 320px;
+    max-width: 30vw;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    pointer-events: auto
+}
+#dialogue-box {
+    background: var(--panel);
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 16px;
+    min-height: 64px;
+    display: none
+}
+#choices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+}
+.choice-btn {
+    padding: 10px;
+    border-radius: 8px;
+    background:#111;
+    border: 1px solid rgba(255,255,255,0.04);
+    color:#fff;
+    cursor: pointer;
+    text-align: left
+}
+.choice-btn.locked {
+    opacity: 0.45;
+    cursor:not-allowed;
+}
+#next-button {
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700
+}
+#next-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed
+}
+/* avatars */
+.avatar {
+    position: absolute;
+    transform: translate(-50%,-100%);
+    z-index: 12;
+    pointer-events: auto
+}
+/* responsive */
+@media (max-width:900px) {
+    #stage {
+        flex-direction: column;
+        align-items:center;
+        height:auto;
+        padding:20px
+    } 
+    #ui-panel {
+        width:90%
+    } 
+    #stage-frame {
+        width: 94vw;
+        height: 60vh;
+        padding: 20px
+    } 
+} 
 
 
 
