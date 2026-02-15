@@ -468,7 +468,7 @@ function sceneRoom(day) {
     clearCountdown();
     lockNext();
     nextButton.style.display = "inline-block";
-    }
+    
 
     // place friend character 
     addCharacter(data.friendCharacter, "85%", "85%", "160px");
@@ -487,6 +487,7 @@ function sceneRoom(day) {
         });
         });
     }
+}
 
 
 
@@ -509,9 +510,9 @@ function sceneRoom(day) {
     let index = 0;
     dialogueBox.style.display = "block";
     dialogueBox.innerText = data.dateDialogue[index] || "";
-}
+
     // show interactive choices
-    showChoices(dateChoices, day, (choice) => {
+    showChoices(date.choices, day, (choice) => {
         dialogueBox.innerText = choice.result 
         setMemory(memory - 5);
 
@@ -525,7 +526,7 @@ function sceneRoom(day) {
         }
         });
     });
-    
+}
     
 
 // ------------------
@@ -535,6 +536,7 @@ function sceneRoom(day) {
 function reflectionScreen() {
     clearLayer();
     dialogueBox.style.display = "block";
+    unlockNext(finalPage);
     dialogueBox.innerHTML = `
     <h2>Reflection</h2>
     <p>What did your friend say on Day 2?</p>
