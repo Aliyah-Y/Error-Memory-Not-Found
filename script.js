@@ -402,10 +402,11 @@ function createSticky(noteData, stickyImg, onReveal) {
     }
 
     // user options for interaction
-
+  
     function showChoices(choices, day, onSelect) {
         choicesWrap.innerHTML = "";
         choicesWrap.style.display = "block";
+        choicesWrap.style.pointerEvents = "auto";
 
         choices.forEach(choice => {
             const btn = document.createElement("button");
@@ -423,7 +424,12 @@ function createSticky(noteData, stickyImg, onReveal) {
 
         choicesWrap.appendChild(btn);
     });
-    }
+}
+
+    function resetChoices() {
+    choicesWrap.innerHTML = "";
+    choicesWrap.style.display = "none";
+}
 
 
 // ------------
@@ -442,6 +448,7 @@ function sceneRoom(day) {
 
     setBackground(data.bgRoom);
     clearLayer();
+    resetChoices();
     createFamilyPhoto(data.familyPhoto);
     clearCountdown();
     dialogueBox.innerHTML = "";
@@ -516,12 +523,15 @@ function sceneRoom(day) {
 
     setBackground(data.bgFriends);
     clearLayer();
+    resetChoices();
     clearCountdown();
     lockNext();
     
     startSceneTimer(8, () => {
+         if (currentScene !== 2) 
+            return;
     // player took too long
-    setMemory(memory - 5);
+    setMemory(memory - 8);
 
     unlockNext(() => {
         advanceTime(45);
@@ -557,9 +567,13 @@ function sceneRoom(day) {
 
     setBackground(data.bgDate);
     clearLayer();
+    resetChoices();
     clearCountdown();
     
     startSceneTimer(8, () => {
+             if (currentScene !== 3) 
+                return;
+
     setMemory(memory - 8);
 
     unlockNext(() => {
