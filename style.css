@@ -55,6 +55,8 @@ body {
     padding: 10px 20px;
     font-size: 18px;
     cursor: pointer;
+    color:aliceblue;
+    border:rgb(57, 56, 56) solid 2px;
 }
 
 #memory-bar {

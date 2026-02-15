@@ -6,7 +6,7 @@ let day = 1;
 let memory = 100;
 
 const nextButton = document.getElementById('nextButton');
-const dialogueBOX = document.getElementById('dialogueBox');
+const dialogueBox = document.getElementById('dialogueBox');
 const layer = document.getElementById('layer');
 const background = document.getElementById('background');
 
@@ -48,35 +48,47 @@ const gameData = {
     },
     3: {
         roomNotes: [
-            
+            "You wake up to a blistering headache.",
+            "Your room feels unfamiliar, yet strangely comforting.",
+            "You find a note on your bedside table: 'Don't forget who you are.'"
         ],
         friendsDialogue: [
-            
+            "Your friends are trying to jog your memory.",
+            "They mention a trip you took together, but you can't recall it."
         ],
         dateDialogue: [
-            
+            "He takes you to a place you used to love, but now it feels alien.",
+            "You struggle to connect with him, even though you know he's important to you."
         ]
     },
      4: {
         roomNotes: [
-            
+            "Your room is messy and disorganized, reflecting the chaos in your mind.",
+            "You find a note in your journal: 'The truth is hidden in plain sight.'",
+            "You see a calendar with important dates circled, but you can't remember why."
         ],
         friendsDialogue: [
-            
+            "Your friends show you photos of past events, but the faces are blurred and unrecognizable.",
+            "They talk about inside jokes and shared experiences, but you can't recall any of them."
         ],
         dateDialogue: [
-            
+            "He looks at you with a mix of sadness and frustration. 'I don't know how to help you,' he says.",
+            "You feel a deep sense of loss and isolation, 'What's wrong with me?' you think to yourself."
         ]
     },
      5: {
         roomNotes: [
-            
+            "Your room is empty and sterile, anything that was once familiar is gone.",
+            "You find a note on the wall: 'The end is near.'",
+            "You look outside and see the sun setting, signaling the end of another day, and perhaps the end of your memories as well."
         ],
         friendsDialogue: [
-            
+            "Your friends have stopped trying to reach out to you, their faces now just distant memories.",
+            "They're angry at you for not remembering them, remembering their names or how you met them."
         ],
         dateDialogue: [
-            
+            "You observe him from a distance, feeling a deep sense of loss and longing.",
+            "You can't remember the last time you were truly happy together."
         ]
     },
 }
