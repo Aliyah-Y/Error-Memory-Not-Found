@@ -256,9 +256,10 @@ function clearLayer() {
 
 function startCountdown(seconds, onTick, onEnd) {
     clearCountdown();
+
     if (!seconds || seconds <= 0) {
         countdownEL.innerText = "0";
-        onEnd && onEnd();
+        if (onEnd) onEnd();
         return;
     } 
     
@@ -267,20 +268,22 @@ function startCountdown(seconds, onTick, onEnd) {
 
     timerId = setInterval(() => {
         s--;
-
+    
+    // making it more scary near the end
     if (s <= 3) {
         countdownEL.style.transform = "scale(1.2)";
     } else {
         countdownEL.style.transform = "scale(1)";
     }
 
-        countdownEL.innerText = s;
-        onTick && onTick(s);
+    countdownEL.innerText = s;
+    
+    if (onTick) onTick(s);
 
-        if (s <= 0) {
-            clearCountdown();
-            onEnd && onEnd();
-        }
+    if (s <= 0) {
+        clearCountdown();
+        if (onEnd) onEnd();
+    }
     }, 1000);
 }
 
@@ -290,7 +293,7 @@ function clearCountdown() {
         timerId = null;
    }
    countdownEL.innerText = "";
-   countdownEL.style.transform = "sclae(1)";
+   countdownEL.style.transform = "scale(1)";
 }
 
 function startSceneTimer(seconds, onEnd) {
@@ -601,7 +604,7 @@ function finalPage() {
     <p>What does it mean to truly know someone? Is it the memories you share, or something deeper?</p>
     <p>As you lose yourself in the haze of forgotten moments, you find solace in the fleeting connections that still linger in your heart.</p>
     `;
-    unlockNext(homeScreen);
+    unlockNext(startGame);
 }
 
 // -----------------
