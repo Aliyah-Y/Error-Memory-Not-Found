@@ -244,17 +244,15 @@ function createSticky(noteData, stickyImg, onReveal) {
 
     // using the sticky image to cover the text before revealing
     if (stickyImg) {
-        
-        el.classel.
-        style.backgroundImage = `url(${stickyImg})`;
-    
+        el.style.backgroundImage = `url(${stickyImg})`;
+    }
+
     layer.appendChild(el);
 
     el.onclick = () => {
         el.innerText = noteData.text;
         onReveal && onReveal();
     };
-}
 }
 
 
@@ -286,51 +284,86 @@ function decreaseMemory(amount) {
 // SCENES! :)
 // ------------
 
-// SCENE 1 - ROOM
+// SCENE 1: ROOM
 
 function sceneRoom(day) {
-    background.src = "assets/day-1/room-bg-1.png";
-    layer.innerHTML = "";
+    currentScene = 1;
+    const data = gameData[day];
+    if (!data) {
+        console.error("No data for day " + day);
+        return;
+    }
+
+    setBackground(data.bgRoom);
+    clearLayer();
+    clearCountdown();
     dialogueBox.innerHTML = "";
     nextButton.style.display = "none";
 
-    const notes = gameData[day].roomNotes;
+    // adding the sticky notes and requiring the play to click all of them before they can proceed to the next scene
+    let required = data.roomNotes.length;
     let clicked = 0;
 
-    notes.forEach((text, index) => {
-        const note = document.createElement("div");
-        note.className = "sticky";
-        
-        // in order to make it responsive to window size
-        const noteWidth = 140; 
-        const noteHeight = 140;
-        const spacing = 20;
-        const startX = window.innerWidth * 0.1; 
-        const startY = window.innerHeight * 0.3; 
-        
-        note.style.left = (startX + index * (noteWidth + spacing)) + "px";
-        note.style.top = startY + "px";
-        note.innerText = "???";
-
-        note.onclick = () => {
-            note.innerText = text;
-            note.style.opacity = 0.8;
-            clicked++;
-
-            if (clicked === notes.length) {
-                nextButton.style.display = "block";
-                nextButton.onclick = () => sceneFriends(day);
+    // countdown starts and if time runs out, then all sticky notes are revealed and player gets memory penalized
+    const roomTimer = 25; // seconds
+    startCountdown(roomTimer, null, () => {
+        // this means the timer ended and all unrevealed notes are revealed
+        const notes = Array.from(layer.querySelectorAll(".sticky"));
+        notes.forEach((note, idx) => {
+            if (note.dataset.revealed !== "true") {
+                const noteData = data.roomNotes[idx];
+                note.dataset.revealed = "true";
+                if (data.stickyImg) {
+                    note.innerHTML = "";
+                    const t = document.createElement("div");
+                    t.style.position = "relative";
+                    t.style.zIndex = "20";
+                    t.style.padding = "10px";
+                    t.style.background = "rgba(255, 255, 255, 0.9)";
+                    t.style.borderRadius = "8px";
+                    t.style.color = "#333";
+                    t.style.fontWeight = "700";
+                    t.innerText = noteData.text;
+                    note.appendChild(t);
+                } else {
+                    note.innerText = noteData.text;
+                }
+                note.style.opacity = 0.8;
             }
-        };
+        });
+        // penalize memory for not revealing in time
+        setMemory(memory - 15);
+        nextButton.disabled = false;
+        setNextHandler(() => {
+            advanceTime(30);
+            sceneFriends(day);
+        });
+    }); 
 
-        layer.appendChild(note);
+    // creating the sticky notes based on the data for the day
+    data.roomNotes.forEach(note => {
+        createSticky(note, data.stickyImg, () => {
+            clicked++;
+            if (clicked >= required) {
+                clearCountdown();
+                nextButton.disabled = false;
+                setNextHandler(() => {
+                    advanceTime(30);
+                    sceneFriends(day);
+                });
+            }
+        });
     });
+
+    dayLabel.innerText = "Day " + day;
+    timeLabel.innerText = minutestoHHMM(gameTimeMinutes);
 }
 
 // SCENE 2 - FRIENDS / SCHOOL
-
 function sceneFriends(day) {
-    background.src = "assets/day-1/school-bg-1.png";
+    currentScene = 2;
+    const data = gameData[day];
+    setBackground(data.bgFriends);
     layer.innerHTML = "";
     nextButton.style.display = "block";
 
@@ -352,11 +385,13 @@ function sceneFriends(day) {
 // SCENE 3 - DATE + MEMORY DECREASE
 
 function sceneDate(day) {
-    background.src = "assets/day-1/date-bg-1.png";
+    currentScene = 3;
+    const data = gameData[day];
+    setBackground(data.bgDate);
     layer.innerHTML = "";
     nextButton.style.display = "block";
 
-    const dialogue = gameData[day].dateDialogue;
+    const dialogue = data.dateDialogue;
     let index = 0;
     
     showDialogue(dialogue[index]);
@@ -406,7 +441,7 @@ function finalPage() {
     <h2>Final Page</h2>
     <p>As your memory fades, you start to question the nature of your reality. Are these people truly your friends and loved ones, or just figments of a fading memory?</p> 
     <p>What does it mean to truly know someone? Is it the memories you share, or something deeper?</p>
-    <p>As you lose yourself in the haze of forgotten moments, you find solace in the fleeting connections that still linger in your heart.</p>'
+    <p>As you lose yourself in the haze of forgotten moments, you find solace in the fleeting connections that still linger in your heart.</p>
     `;
 }
 
@@ -419,7 +454,7 @@ startButton.addEventListener("click", () => {
     currentDay = 1;
     setMemory(100);
     gameTimeMinutes = 8 * 60; // reset to 8:00 AM
-    dayLabel.innerText = "Day" + currentDay;
+    dayLabel.innerText = "Day " + currentDay;
     timeLabel.innerText = minutestoHHMM(gameTimeMinutes);
     sceneRoom(currentDay);
 });
