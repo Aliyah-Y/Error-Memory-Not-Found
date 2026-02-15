@@ -193,8 +193,10 @@ function advanceTime(minutes) {
 
 function clearLayer() {
     layer.innerHTML = "";
-    dialogueBox.innerHTML = "none";
-    choicesWrap.innerHTML = "none";
+    dialogueBox.innerHTML = "";
+    dialogueBox.style.display = "none";
+    choicesWrap.innerHTML = "";
+    choicesWrap.style.display = "none";
     nextButton.disabled = true;
     nextButton.style.display = "inline-block";
 }
@@ -401,6 +403,11 @@ function sceneRoom(day) {
 function sceneFriends(day) {
     currentScene = 2;
     const data = gameData[day];
+    if (!data) {
+        console.error('No data for day', day);
+        return;
+    }
+
     setBackground(data.bgFriends);
     clearLayer();
     clearCountdown();
@@ -410,12 +417,9 @@ function sceneFriends(day) {
 
     let index = 0;
     dialogueBox.style.display = "block";
-    dialogueBox.innerHTML = data.friendsDialogue[index];
+    dialogueBox.innerText = data.friendsDialogue[index] || "";
 
-    // show choices 
-    // (some are locked because of the availability from day # 
-        // -- showcase memory loss)
-
+    // show choices (some may be locked)
     if (data.choices && data.choices.length) {
         showChoices(data.choices, day, (choice) => {
             dialogueBox.innerText = choice.result;
@@ -425,80 +429,56 @@ function sceneFriends(day) {
                 sceneDate(day);
             });
         });
-
-        // allowing the player to click next without choosing anything, b/c they didn't choose in time\
-        nextButton.disabled = false;
-        setNextHandler(() => {
-            index++;
-            if (index < data.friendsDialogue.length) {
-                dialogueBox.innerText = data.friendsDialogue[index];
-            } else { 
-                advanceTime(45);
-                sceneDate(day);
-            }
-        });
-    } else {
-        nextButton.disabled = false;
-        setNextHandler(() => {
-            index++;
-            if (index < data.friendsDialogue.length) {
-                dialogueBox.innerText = data.friendsDialogue[index];
-            } else {
-                advanceTime(45);
-                sceneDate(day);
-            }
-        });
     }
+
+    // allow player to progress through dialogue
+    nextButton.disabled = false;
+    setNextHandler(() => {
+        index++;
+        if (index < data.friendsDialogue.length) {
+            dialogueBox.innerText = data.friendsDialogue[index];
+        } else {
+            advanceTime(45);
+            sceneDate(day);
+        }
+    });
+}
 
 // SCENE 3 - DATE + MEMORY DECREASE
 
 function sceneDate(day) {
+    
     currentScene = 3;
     const data = gameData[day];
+    if (!data) {
+        console.error('No data for day', day);
+        return;
+    }
+
     setBackground(data.bgDate);
     clearLayer();
     clearCountdown();
 
     // add the date avatar to the screen
     addAvatar(data.dateAvatar, "70%", "60%", "160px");
-    
+
     let index = 0;
     dialogueBox.style.display = "block";
-    dialogueBox.innerText = data.dateDialogue[index];
+    dialogueBox.innerText = data.dateDialogue[index] || "";
 
-    // if day >= 4, then player has limited dialogue options to showcase memory loss
-    // they can still see what they could have said, just can't click
     const lockedOnLateDays = day >= 4;
-    
-    // set of data choices that are locked after or during day 4
     const dataChoices = [
         { text: "Say I remember you", result: "You try to say it but no words come out.", availableFromDay: 1 },
         { text: "Ask about us", result: "They look pained as though he wants to avoid the topic. He speaks slowly.", availableFromDay: 1 }
     ];
 
-if (lockedOnLateDays) {
-    // show the locked choices visually but disable them from being selected
-    showChoices(dataChoices.map(c => ({...c, availableFromDay: day + 1})), day, null);    
-    dialogueBox.innerText = data.dateDialogue.join(" ");
-    nextButton.disabled = false;
-    setNextHandler(() => {
-        // memory penalty for inability to engage properly
-        setMemory(memory - 15);
-        if (day < 5) {
-            currentDay = day + 1;
-            advanceTime(60 * 12); // advance to next day
-            sceneRoom(currentDay);
-        } else {
-            reflectionScreen();
-        }
-    });
-} else {
-    // normal interactive date scene with choices
-    showChoices(dataChoices, day, (choice) => {
-        dialogueBox.innerText = choice.result;
-        setMemory(memory - 10); // memory penalty for engaging but not fully remembering
+    if (lockedOnLateDays) {
+        // show locked choices visually but disable selection
+        showChoices(dataChoices.map(c => ({ ...c, availableFromDay: day + 1 })), day, null);
+        dialogueBox.innerText = data.dateDialogue.join(" ");
         nextButton.disabled = false;
         setNextHandler(() => {
+            setMemory(memory - 15);
             if (day < 5) {
                 currentDay = day + 1;
                 advanceTime(60 * 12);
@@ -507,25 +487,43 @@ if (lockedOnLateDays) {
                 reflectionScreen();
             }
         });
-    });
-    
-    // ALSO the player is allowed to skip through the date dialogye
-    nextButton.disabled = false;
-    setNextHandler(() => {
-        setMemory(memory - 20);
-        index++;
-        if (index < data.dateDialogue.length) {
-            dialogueBox.innerText = data.dateDialogue[index];
-        } else {
-            if (day < 5) {
-                currentDay = day + 1;
-                advanceTime(60 * 12);
-                sceneRoom(currentDay);
+    } else {
+        // normal interactive date scene with choices
+        showChoices(dataChoices, day, (choice) => {
+            dialogueBox.innerText = choice.result;
+            setMemory(memory - 10);
+            nextButton.disabled = false;
+            setNextHandler(() => {
+                if (day < 5) {
+                    currentDay = day + 1;
+                    advanceTime(60 * 12);
+                    sceneRoom(currentDay);
+                } else {
+                    reflectionScreen();
+                }
+            });
+        });
+
+        // allow skipping through the date dialogue
+        nextButton.disabled = false;
+        setNextHandler(() => {
+            setMemory(memory - 20);
+            index++;
+            if (index < data.dateDialogue.length) {
+                dialogueBox.innerText = data.dateDialogue[index];
             } else {
-                reflectionScreen();
+                if (day < 5) {
+                    currentDay = day + 1;
+                    advanceTime(60 * 12);
+                    sceneRoom(currentDay);
+                } else {
+                    reflectionScreen();
+                }
             }
-        }
-    });
+        });
+    }
+
+}
 
 // ------------------
 // REFLECTION SCREEN
