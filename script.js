@@ -522,32 +522,11 @@ function sceneDate(day) {
     let index = 0;
     dialogueBox.style.display = "block";
     dialogueBox.innerText = data.dateDialogue[index] || "";
-
-    const lockedOnLateDays = day >= 4;
-    const dataChoices = [
-        { text: "Say I remember you", result: "You try to say it but no words come out.", availableFromDay: 1 },
-        { text: "Ask about us", result: "They look pained as though he wants to avoid the topic. He speaks slowly.", availableFromDay: 4 }
-    ];
-
-    if (lockedOnLateDays) {
-        // show locked choices visually but disable selection
-        showChoices(dataChoices.map(c => ({ ...c, availableFromDay: day + 1 })), day, null);
-        dialogueBox.innerText = data.dateDialogue.join(" ");
-        unlockNext(() => {
-            setMemory(memory - 10);
-            if (day < 5) {
-                currentDay = day + 1;
-                advanceTime(60 * 12);
-                sceneRoom(currentDay);
-            } else {
-                reflectionScreen();
-            }
-        });
-    } else {
-        // normal interactive date scene with choices
+    
+    // normal interactive date scene with choices
         showChoices(dataChoices, day, (choice) => {
-            dialogueBox.innerText = choice.result;
-            setMemory(memory - 10);
+        dialogueBox.innerText = choice.result;
+           setMemory(memory - 10);
            unlockNext(() => {
                 if (day < 5) {
                     currentDay = day + 1;
@@ -576,8 +555,6 @@ function sceneDate(day) {
             }
         });
     }
-
-}
 
 // ------------------
 // REFLECTION SCREEN
