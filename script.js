@@ -51,8 +51,8 @@ const gameData = {
             "He smiles at you warmly. 'It's so good to see you again,' he says.",
         ],
         choices: [
-            { text: "Ask about the accident", result: "Your friends look at you surprised but explain gently.", availableFromDay: 1 }, 
-            { text: "Change the subject", result: "You laugh it off; they seem relieved.", availableFromDay: 1 }
+            { text: "Ask about the accident", result: "Your friends look at you surprised but explain gently." }, 
+            { text: "Change the subject", result: "You laugh it off; they seem relieved." }
         ],
         familyPhoto: {
             src: "assets/day-1/family-photo-1.png",
@@ -81,8 +81,8 @@ const gameData = {
             "He orders your favorite meal. You don't remember ever enjoying it."
         ],
         choices: [
-            { text: "Ask if they're worried", result: "They say they are only trying to help.", availableFromDay: 1 }, 
-            { text: "Pretend it's fine", result: "They nod but look uneasy.", availableFromDay: 1 }
+            { text: "Ask if they're worried", result: "They say they are only trying to help." }, 
+            { text: "Pretend it's fine", result: "They nod but look uneasy." }
         ],
         familyPhoto: {
             src: "assets/day-2/family-photo-2.png",
@@ -111,8 +111,8 @@ const gameData = {
             "You struggle to connect with him, even though you know he's important to you."
         ],
         choices: [
-            { text: "Ask about the trip", result: "They describe it in detail, but you can't visualize it.", availableFromDay: 1 }, 
-            { text: "Say you don't remember", result: "They seem disappointed but don't push further.", availableFromDay: 2 }
+            { text: "Ask about the trip", result: "They describe it in detail, but you can't visualize it." }, 
+            { text: "Say you don't remember", result: "They seem disappointed but don't push further." }
         ],
         familyPhoto: {
             src: "assets/day-3/family-photo-3.png",
@@ -153,8 +153,8 @@ const gameData = {
             "He looks at you with a mix of sadness and frustration. 'I don't know how to help you,' he says.",
         ],
         choices: [
-            { text: "Try to explain", result: "Words fail you; they look worried.", availableFromDay: 1 }, 
-            { text: "Stay silent", result: "Silence grows heavy.", availableFromDay: 3 }
+            { text: "Try to explain", result: "Words fail you; they look worried." }, 
+            { text: "Stay silent", result: "Silence grows heavy." }
         ],
         familyPhoto: {
             src: "assets/day-4/family-photo-4.png",
@@ -183,8 +183,8 @@ const gameData = {
             "You observe him from a distance, feeling a deep sense of loss and longing.",
         ],
         choices: [
-            { text: "Try to reach out", result: "They don't recognize you anymore.", availableFromDay: 1 }, 
-            { text: "Walk away", result: "You find a bittersweet comfort in the fading memories.", availableFromDay: 4 }
+            { text: "Try to reach out", result: "They don't recognize you anymore." }, 
+            { text: "Walk away", result: "You find a bittersweet comfort in the fading memories." }
         ],
         familyPhoto: {
             src: "assets/day-5/family-photo-5.png",
@@ -353,26 +353,6 @@ function createSticky(noteData, stickyImg, onReveal) {
         return img; 
     } 
     
-    // making the choices appear along with locking visual
-    function showChoices(choicesArray, day, onChoose) { 
-        choicesWrap.innerHTML = ""; 
-        choicesWrap.style.display = "flex"; 
-        choicesArray.forEach((c, i) => { 
-            const btn = document.createElement("button"); 
-            btn.className = "choice-btn"; 
-            btn.innerText = c.text; 
-            if ((c.availableFromDay || 1) > day) { 
-                btn.classList.add("locked"); 
-                btn.innerText = c.text + " (locked)"; 
-                btn.disabled = true; 
-            } else { 
-                btn.addEventListener("click", () => { 
-                    onChoose && onChoose(c); 
-                }); 
-            } 
-            choicesWrap.appendChild(btn); 
-        }); 
-    } 
     // to be able to move to the next scene appropriately
     function setNextHandler(fn) { 
         nextButton.onclick = null; 
