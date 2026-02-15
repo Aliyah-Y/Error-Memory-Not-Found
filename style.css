@@ -233,11 +233,11 @@ for when you actually want to do stuff with the game... */
     transform: translateY(-1px);
 }
 
-/* avatars */
-.avatar {
+/* characters */
+.character {
     position: absolute;
     transform: translate(-50%,-100%);
-    z-index: 12;
+    z-index: 15;
     pointer-events: auto
 }
 /* responsive */

@@ -130,9 +130,21 @@ const gameData = {
         dateCharacter: "assets/day-4/date-char-4.png",
         stickyImg: "assets/day-4/sticky-note-4.png",
         roomNotes: [
-            { text: "Your room is messy and disorganized, reflecting the chaos in your mind.", x: "10%", y: "30%", w: "120px", h: "120px" },
-            { text: "You find a note in your journal: 'The truth is hidden in plain sight.'", x: "45%", y: "45%", w: "140px", h: "140px" },
-            { text: "You see a calendar with important dates circled, but you can't remember why.", x: "75%", y: "65%", w: "130px", h: "130px" }
+            { text: "Your room is messy and disorganized, reflecting the chaos in your mind.", 
+                x: "10%", 
+                y: "30%", 
+                w: "120px", 
+                h: "120px" },
+            { text: "You find a note in your journal: 'The truth is hidden in plain sight.'", 
+                x: "45%", 
+                y: "45%", 
+                w: "140px", 
+                h: "140px" },
+            { text: "You see a calendar with important dates circled, but you can't remember why.", 
+                x: "75%", 
+                y: "65%", 
+                w: "130px", 
+                h: "130px" }
         ],
         friendsDialogue: [
             "Your friends show you photos of past events, but the faces are blurred and unrecognizable.",
@@ -373,7 +385,7 @@ function createSticky(noteData, stickyImg, onReveal) {
     }
 
     function unlockNext(handler) {
-        nextButton.style.display = "inline-block";
+        nextButton.style.display = "block";
         nextButton.disabled = false;
         setNextHandler(handler);
     }
@@ -471,9 +483,10 @@ function sceneRoom(day) {
     clearCountdown();
     lockNext();
     nextButton.style.display = "inline-block";
+    }
 
     // place friend character 
-    addCharacter(data.friendCharacter, "70%", "85%", "160px");
+    addCharacter(data.friendCharacter, "85%", "85%", "160px");
 
     let index = 0;
     dialogueBox.style.display = "block";
@@ -482,27 +495,14 @@ function sceneRoom(day) {
     // show choices (always enabled; no locking)
     if (data.choices && data.choices.length) {
         showChoices(data.choices, day, (choice) => {
-        // guard against non-string results b/c before it was saying [object] ????
-        dialogueBox.innerText = (typeof choice.result === "string") ? choice.result : String(choice.result);
-        
-        // enable Next to move on after a choice
+        dialogueBox.innerText = choice.result;
         unlockNext(() => {
             advanceTime(45);
             sceneDate(day);
         });
         });
     }
-    // Next also advances through dialogue lines if player doesn't choose
-    unlockNext(() => {
-        index++;
-        if (index < data.friendsDialogue.length) {
-        dialogueBox.innerText = data.friendsDialogue[index];
-        } else {
-        advanceTime(45);
-        sceneDate(day);
-        }
-    });
-    }
+
 
 
 // SCENE 3 - DATE + MEMORY DECREASE
@@ -524,19 +524,12 @@ function sceneRoom(day) {
     let index = 0;
     dialogueBox.style.display = "block";
     dialogueBox.innerText = data.dateDialogue[index] || "";
-
-    // local date choices (always enabled)
-    const dateChoices = [
-        { text: "Say I remember you", result: "You try to say it but no words come out." },
-        { text: "Ask about us", result: "They look pained as though he wants to avoid the topic. He speaks slowly." }
-    ];
-
+}
     // show interactive choices
     showChoices(dateChoices, day, (choice) => {
-        // guard against non-string results
-        dialogueBox.innerText = (typeof choice.result === "string") ? choice.result : String(choice.result);
+        dialogueBox.innerText = choice.result 
         setMemory(memory - 5);
-        // ensure Next is visible and will advance the day
+
         unlockNext(() => {
         if (day < 5) {
             currentDay = day + 1;
@@ -547,25 +540,8 @@ function sceneRoom(day) {
         }
         });
     });
-
-    // allow skipping through the date dialogue with Next
-    // ensure Next is visible for this path as well
-    unlockNext(() => {
-        setMemory(memory - 10);
-        index++;
-        if (index < data.dateDialogue.length) {
-        dialogueBox.innerText = data.dateDialogue[index];
-        } else {
-        if (day < 5) {
-            currentDay = day + 1;
-            advanceTime(60 * 12);
-            sceneRoom(currentDay);
-        } else {
-            reflectionScreen();
-        }
-        }
-    });
-    }
+    
+    
 
 // ------------------
 // REFLECTION SCREEN
