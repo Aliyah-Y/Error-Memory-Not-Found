@@ -36,8 +36,8 @@ const gameData = {
         bgRoom: "assets/day-1/room-bg-1.png",
         bgFriends: "assets/day-1/school-bg-1.png",
         bgDate: "assets/day-1/date-bg-1.png",
-        friendAvatar: "assets/day-1/friend-avatar-1.png",
-        dateAvatar: "assets/day-1/date-avatar-1.png",
+        friendCharacter: "assets/day-1/friend-char-1.png",
+        dateCharacter: "assets/day-1/date-char-1.png",
         stickyImg: "assets/day-1/sticky-note-1.png",
         roomNotes: [
             { text: "You got into a car accident and woke up in your bed.", x: "12%", y: "40%", w: "120px", h: "120px" },
@@ -68,8 +68,8 @@ const gameData = {
         bgRoom: "assets/day-2/room-bg-2.png",
         bgFriends: "assets/day-2/school-bg-2.png",
         bgDate: "assets/day-2/date-bg-2.png",
-        friendAvatar: "assets/day-2/friend-avatar-2.png",
-        dateAvatar: "assets/day-2/date-avatar-2.png",
+        friendCharacter: "assets/day-2/friend-char-2.png",
+        dateCharacter: "assets/day-2/date-char-2.png",
         stickyImg: "assets/day-2/sticky-note-2.png",
         roomNotes: [
             { text: "You woke up confused again in your bed.", x: "14%", y: "20%", w: "120px", h: "120px" },
@@ -100,8 +100,8 @@ const gameData = {
         bgRoom: "assets/day-3/room-bg-3.png",
         bgFriends: "assets/day-3/school-bg-3.png",
         bgDate: "assets/day-3/date-bg-3.png",
-        friendAvatar: "assets/day-3/friend-avatar-3.png",
-        dateAvatar: "assets/day-3/date-avatar-3.png",
+        friendCharacter: "assets/day-3/friend-char-3.png",
+        dateCharacter: "assets/day-3/date-char-3.png",
         stickyImg: "assets/day-3/sticky-note-3.png",
         roomNotes: [
             { text: "You wake up to a blistering headache.", x: "12%", y: "40%", w: "120px", h: "120px" },
@@ -132,8 +132,8 @@ const gameData = {
         bgRoom: "assets/day-4/room-bg-4.png",
         bgFriends: "assets/day-4/school-bg-4.png",
         bgDate: "assets/day-4/date-bg-4.png",
-        friendAvatar: "assets/day-4/friend-avatar-4.png",
-        dateAvatar: "assets/day-4/date-avatar-4.png",
+        friendCharacter: "assets/day-4/friend-char-4.png",
+        dateCharacter: "assets/day-4/date-char-4.png",
         stickyImg: "assets/day-4/sticky-note-4.png",
         roomNotes: [
             { text: "Your room is messy and disorganized, reflecting the chaos in your mind.", x: "10%", y: "30%", w: "120px", h: "120px" },
@@ -164,8 +164,8 @@ const gameData = {
         bgRoom: "assets/day-5/room-bg-5.png",
         bgFriends: "assets/day-5/school-bg-5.png",
         bgDate: "assets/day-5/date-bg-5.png",
-        friendAvatar: "assets/day-5/friend-avatar-5.png",
-        dateAvatar: "assets/day-5/date-avatar-5.png",
+        friendCharacter: "assets/day-5/friend-char-5.png",
+        dateCharacter: "assets/day-5/date-char-5.png",
         stickyImg: "assets/day-5/sticky-note-5.png",
         roomNotes: [
             { text: "Your room is empty and sterile, anything that was once familiar is gone.", x: "10%", y: "30%", w: "120px", h: "120px" },
@@ -338,11 +338,11 @@ function createSticky(noteData, stickyImg, onReveal) {
         layer.appendChild(el);
     }
 
-    // add avatar 
-    function addAvatar(src, x, y, size = "140px") { 
+    // add character 
+    function addCharacter(src, x, y, size = "140px") { 
         if (!src) return null; 
         const img = document.createElement("img"); 
-        img.className = "avatar"; 
+        img.className = "character"; 
         img.src = src; 
         img.style.left = x; 
         img.style.top = y; 
@@ -481,8 +481,8 @@ function sceneFriends(day) {
     lockNext();
     nextButton.style.display = "inline-block";
 
-    // add the friend avatar to the screen
-    addAvatar(data.friendAvatar, "20%", "60%", "160px");
+    // add the friend character to the screen
+    addCharacter(data.friendCharacter, "20%", "60%", "160px");
 
     let index = 0;
     dialogueBox.style.display = "block";
@@ -526,8 +526,8 @@ function sceneDate(day) {
     clearLayer();
     clearCountdown();
 
-    // add the date avatar to the screen
-    addAvatar(data.dateAvatar, "70%", "60%", "160px");
+    // add the date character to the screen
+    addCharacter(data.dateCharacter, "70%", "60%", "160px");
 
     let index = 0;
     dialogueBox.style.display = "block";
