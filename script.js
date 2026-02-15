@@ -401,6 +401,30 @@ function createSticky(noteData, stickyImg, onReveal) {
         setNextHandler(handler);
     }
 
+    // user options for interaction
+
+    function showChoices(choices, day, onSelect) {
+        choicesWrap.innerHTML = "";
+        choicesWrap.style.display = "block";
+
+        choices.forEach(choice => {
+            const btn = document.createElement("button");
+            btn.className = "choice-btn";
+            btn.innerText = choice.text;
+
+        btn.onclick = () => {
+            // remove choices after selection
+            clearCountdown();
+            choicesWrap.innerHTML = "";
+            choicesWrap.style.display = "none";
+
+            if (onSelect) onSelect(choice);
+        };
+
+        choicesWrap.appendChild(btn);
+    });
+    }
+
 
 // ------------
 // SCENES! :)
