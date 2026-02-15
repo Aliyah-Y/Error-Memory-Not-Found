@@ -1,27 +1,57 @@
+<!-- hey it's me, the html file. -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" 
+        content="width=device-width, initial-scale=1.0">
     <title>Error: Memory Not Found</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" 
+        href="style.css">
 </head>
 
 <body>
-    <h1>Error: Memory Not Found</h1>
-    
-    <div id="memory-bar"></div>
 
-    <div id="game-container">
-        <img id="background" src="" alt="scene background">
+    <!--- HOMEPAGE --->
+    <div id="home-screen" class="screen">
+        <h1 id="game-title">Error: Memory Not Found</h1>
+        <p id="subtitle">A game about memory and identity</p>
+        <button id="start-button" class="primary">Start Day 1</button>
+    </div>
 
-        <div id="interactive-layer"></div>
+    <!--- GAME INTERFACE --->
+    <div id="game-root" style="display: none;">
+        <header id="header-display">
+            <div id="day-time">
+                <div id="day-label">Day 1</div>
+                <div id="time-label">Time</div>
+            </div>
 
-        <div id="dialogue-box"></div>
+            <div id="timer-wrap">
+                <div id="countdown">25</div>
+                <div id="timer-label">Time</div>
+            </div>
+        <div id="memory-wrap">
+            <div id="memory-bar"></div>
+            <div id="memory-percent">100%</div>
+        </div>
+        </header>
+        
+        <main id="stage">
+            <div id="stage-frame">
+                <img id="background" src="" alt="scene background" />
+                <div id="interactive-layer"></div>
+            </div>
 
-        <button id="next-button" style="display:none;">Next</button>
-    </div>  
+        <aside id="ui-panel">
+            <div id="dialogue-box" style="display: none;"></div>
+            <div id="choices" style="display: none;"></div>
+            <button id="next-button" class="primary" disabled>Next</button>
+        </aside>
+       </main>
+    </div>
 
-        <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

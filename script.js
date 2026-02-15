@@ -1,19 +1,32 @@
 // ----------------
-// GAME STATE
+// GLOBAL VARIABLES
 // ----------------
 
-let day = 1;
-let memory = 100;
+const startButton = document.getElementById('start-button');
+const homeScreen = document.getElementById('home-screen');
+const gameInterface = document.getElementById('game-interface');
 
 const nextButton = document.getElementById('next-button');
 const dialogueBox = document.getElementById('dialogue-box');
 const layer = document.getElementById('interactive-layer');
 const background = document.getElementById('background');
 
+const memoryBar = document.getElementById('memory-bar');
+const memoryLabel = document.getElementById('memory-label');
+
+
+// ----------------
+// GAME STATE
+// ----------------
+
+let day = 1;
+let memory = 100;
+
+
 // ----------------
 // GAME LOGIC
 // ----------------
-
+// location of stick notes is very specific (text, x, y, width, height)
 // this is for each day i.e. 1 = day 1, 2 = day 2, etc.
 const gameData = {
     1: {
@@ -116,7 +129,7 @@ function decreaseMemory(amount) {
 // -----------------------------------
 
 function sceneRoom(day) {
-    background.src = "assets/room/day-1-scene-1.png";
+    background.src = "assets/day-1/room-bg-1.png";
     layer.innerHTML = "";
     dialogueBox.innerHTML = "";
     nextButton.style.display = "none";
@@ -159,7 +172,7 @@ function sceneRoom(day) {
 // -----------------------------------
 
 function sceneFriends(day) {
-    background.src = "assets/friends/day-1-scene-2.png";
+    background.src = "assets/day-1/school-bg-1.png";
     layer.innerHTML = "";
     nextButton.style.display = "block";
 
@@ -183,7 +196,7 @@ function sceneFriends(day) {
 // -----------------------------------
 
 function sceneDate(day) {
-    background.src = "assets/date/day-1-scene-3.png";
+    background.src = "assets/day-1/date-bg-1.png";
     layer.innerHTML = "";
     nextButton.style.display = "block";
 
