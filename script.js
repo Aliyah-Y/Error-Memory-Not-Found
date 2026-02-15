@@ -55,7 +55,14 @@ const gameData = {
         choices: [
             { text: "Ask about the accident", result: "surprised and explain gently.", availableFromDay: 1 }, 
             { text: "Change the subject", result: "You laugh it off; they seem relieved.", availableFromDay: 1 }
-        ] 
+        ],
+        familyPhoto: {
+            src: "assets/day-1/family-photo-1.png",
+            x: "25%",
+            y: "70%",
+            w: "150px",
+            h: "100px",
+        }
     },
     2: {
         bgRoom: "assets/day-2/room-bg-2.png",
@@ -80,7 +87,14 @@ const gameData = {
         choices: [
             { text: "Ask if they're worried", result: "They say they are only trying to help.", availableFromDay: 1 }, 
             { text: "Pretend it's fine", result: "They nod but look uneasy.", availableFromDay: 1 }
-        ]
+        ],
+        familyPhoto: {
+            src: "assets/day-2/family-photo-2.png",
+            x: "25%",
+            y: "70%",
+            w: "150px",
+            h: "100px",
+        }
     },
     3: {
         bgRoom: "assets/day-3/room-bg-3.png",
@@ -105,7 +119,14 @@ const gameData = {
         choices: [
             { text: "Ask about the trip", result: "They describe it in detail, but you can't visualize it.", availableFromDay: 1 }, 
             { text: "Say you don't remember", result: "They seem disappointed but don't push further.", availableFromDay: 2 }
-        ]
+        ],
+        familyPhoto: {
+            src: "assets/day-3/family-photo-3.png",
+            x: "25%",
+            y: "70%",
+            w: "150px",
+            h: "100px",
+        }
     },
      4: {
         bgRoom: "assets/day-4/room-bg-4.png",
@@ -130,7 +151,14 @@ const gameData = {
         choices: [
             { text: "Try to explain", result: "Words fail you; they look worried.", availableFromDay: 1 }, 
             { text: "Stay silent", result: "Silence grows heavy.", availableFromDay: 3 }
-        ]
+        ],
+        familyPhoto: {
+            src: "assets/day-4/family-photo-4.png",
+            x: "25%",
+            y: "70%",
+            w: "150px",
+            h: "100px",
+        }
     },
      5: {
         bgRoom: "assets/day-5/room-bg-5.png",
@@ -155,7 +183,14 @@ const gameData = {
         choices: [
             { text: "Try to reach out", result: "They don't recognize you anymore.", availableFromDay: 1 }, 
             { text: "Walk away", result: "You find a bittersweet comfort in the fading memories.", availableFromDay: 4 }
-        ]
+        ],
+        familyPhoto: {
+            src: "assets/day-5/family-photo-5.png",
+            x: "25%",
+            y: "70%",
+            w: "150px",
+            h: "100px",
+        }
     },
 }
 
@@ -204,8 +239,8 @@ function clearLayer() {
     dialogueBox.style.display = "none";
     choicesWrap.innerHTML = "";
     choicesWrap.style.display = "none";
-    nextButton.disabled = true;
-    nextButton.style.display = "inline-block";
+    lockedNext();
+    nextButton.style.display = "none";
 }
 
 // ----------------------------
@@ -288,6 +323,21 @@ function createSticky(noteData, stickyImg, onReveal) {
     return el; 
 } 
 
+    // make the family photo
+    function createFamilyPhoto(photoData) {
+        if (!photoData) return;
+        
+        const el = document.createElement("div");
+        el.className = "family-photo";
+
+        el.style.left = photoData.x;
+        el.style.top = photoData.y;
+        el.style.width = photoData.w;
+        el.style.height = photoData.h;
+        el.style.backgroundImage = `url(${photoData.src})`;
+        layer.appendChild(el);
+    }
+
     // add avatar 
     function addAvatar(src, x, y, size = "140px") { 
         if (!src) return null; 
@@ -327,6 +377,17 @@ function createSticky(noteData, stickyImg, onReveal) {
         nextButton.onclick = fn; 
     }
 
+    function lockNext() {
+        nextButton.disabled = true;
+        nextButton.onClick = null;
+    }
+
+    function unlockNext(handler) {
+        nextButton.style.display = "inline-block";
+        nextButton.disabled = false;
+        setNextHandler(handler);
+    }
+
 // ------------
 // SCENES! :)
 // ------------
@@ -342,6 +403,7 @@ function sceneRoom(day) {
     }
 
     setBackground(data.bgRoom);
+    createFamilyPhoto(data.familyPhoto);
     clearLayer();
     clearCountdown();
     dialogueBox.innerHTML = "";
@@ -380,8 +442,8 @@ function sceneRoom(day) {
         });
         // penalize memory for not revealing in time
         setMemory(memory - 15);
-        nextButton.disabled = false;
-        setNextHandler(() => {
+        nextButton.style.display = "inline-block";
+        unlockNext (() => {
             advanceTime(30);
             sceneFriends(day);
         });
@@ -393,8 +455,8 @@ function sceneRoom(day) {
             clicked++;
             if (clicked >= required) {
                 clearCountdown();
-                nextButton.disabled = false;
-                setNextHandler(() => {
+                nextButton.style.display = "inline-block";
+                unlockNext(() => {
                     advanceTime(30);
                     sceneFriends(day);
                 });
@@ -414,10 +476,12 @@ function sceneFriends(day) {
         console.error('No data for day', day);
         return;
     }
-
+    
     setBackground(data.bgFriends);
     clearLayer();
     clearCountdown();
+    lockNext();
+    nextButton.style.display = "inline-block";
 
     // add the friend avatar to the screen
     addAvatar(data.friendAvatar, "20%", "60%", "160px");
@@ -439,8 +503,7 @@ function sceneFriends(day) {
     }
 
     // allow player to progress through dialogue
-    nextButton.disabled = false;
-    setNextHandler(() => {
+    unlockNext(() => {
         index++;
         if (index < data.friendsDialogue.length) {
             dialogueBox.innerText = data.friendsDialogue[index];
@@ -483,8 +546,7 @@ function sceneDate(day) {
         // show locked choices visually but disable selection
         showChoices(dataChoices.map(c => ({ ...c, availableFromDay: day + 1 })), day, null);
         dialogueBox.innerText = data.dateDialogue.join(" ");
-        nextButton.disabled = false;
-        setNextHandler(() => {
+        unlockNext(() => {
             setMemory(memory - 15);
             if (day < 5) {
                 currentDay = day + 1;
@@ -499,8 +561,7 @@ function sceneDate(day) {
         showChoices(dataChoices, day, (choice) => {
             dialogueBox.innerText = choice.result;
             setMemory(memory - 10);
-            nextButton.disabled = false;
-            setNextHandler(() => {
+           unlockNext(() => {
                 if (day < 5) {
                     currentDay = day + 1;
                     advanceTime(60 * 12);
@@ -512,8 +573,7 @@ function sceneDate(day) {
         });
 
         // allow skipping through the date dialogue
-        nextButton.disabled = false;
-        setNextHandler(() => {
+        unlockNext(() => {
             setMemory(memory - 20);
             index++;
             if (index < data.dateDialogue.length) {
