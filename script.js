@@ -244,41 +244,79 @@ function createSticky(noteData, stickyImg, onReveal) {
 
     // using the sticky image to cover the text before revealing
     if (stickyImg) {
+        el.classList.add("sticky-img");
         el.style.backgroundImage = `url(${stickyImg})`;
+        el.style.backgroundSize = "cover";
+        el.style.backgroundPosition = "center";
+        el.innerText = ""; // hide text until revealed
+    } else {
+        el.innerText = "???"
     }
+    el.dataset.revealed = "false";
+    el.addEventListener("click", () => {
+        if (el.dataset.revealed === "true") return; // already revealed
+        el.dataset.revealed = "true";
+        // using the image and overlaying the text
+        if (stickyImg) { 
+            el.innerText = ""; 
+            const t = document.createElement("div"); 
+            t.style.position = "relative"; 
+            t.style.zIndex = "20"; 
+            t.style.padding = "6px"; 
+            t.style.background = "rgba(255,255,255,0.9)"; 
+            t.style.borderRadius = "6px"; 
+            t.style.color = "#000"; 
+            t.style.fontWeight = "700"; 
+            t.innerText = noteData.text; 
+            el.appendChild(t); 
+        } else { 
+            el.innerText = noteData.text; 
+        } 
+        el.style.opacity = "0.95"; 
+        onReveal && onReveal(el); 
+    }); 
+    layer.appendChild(el); 
+    return el; 
+} 
 
-    layer.appendChild(el);
-
-    el.onclick = () => {
-        el.innerText = noteData.text;
-        onReveal && onReveal();
-    };
-}
-
-
-
-
-
-
-
-// -----------------
-// UI LOGIC (user interface)
-// -----------------
-
-function showDialogue(text) {
-    dialogueBox.innerText = text;
-    nextButton.style.display = "block";
-}
-
-function decreaseMemory(amount) {
-    memory -= amount;
-    document.getElementById("memory-bar").style.width = memory + "%"
-
-    if (memory <= 0) {
-        reflectionScreen();
+    // add avatar 
+    function addAvatar(src, x, y, size = "140px") { 
+        if (!src) return null; 
+        const img = document.createElement("img"); 
+        img.className = "avatar"; 
+        img.src = src; 
+        img.style.left = x; 
+        img.style.top = y; 
+        img.style.width = size; 
+        layer.appendChild(img); 
+        return img; 
+    } 
+    
+    // making the choices appear along with locking visual
+    function showChoices(choicesArray, day, onChoose) { 
+        choicesWrap.innerHTML = ""; 
+        choicesWrap.style.display = "flex"; 
+        choicesArray.forEach((c, i) => { 
+            const btn = document.createElement("button"); 
+            btn.className = "choice-btn"; 
+            btn.innerText = c.text; 
+            if ((c.availableFromDay || 1) > day) { 
+                btn.classList.add("locked"); 
+                btn.innerText = c.text + " (locked)"; 
+                btn.disabled = true; 
+            } else { 
+                btn.addEventListener("click", () => { 
+                    onChoose && onChoose(c); 
+                }); 
+            } 
+            choicesWrap.appendChild(btn); 
+        }); 
+    } 
+    // to be able to move to the next scene appropriately
+    function setNextHandler(fn) { 
+        nextButton.onclick = null; 
+        nextButton.onclick = fn; 
     }
-}
-
 
 // ------------
 // SCENES! :)
@@ -421,28 +459,73 @@ function sceneDate(day) {
     clearLayer();
     clearCountdown();
 
+    // add the date avatar to the screen
+    addAvatar(data.dateAvatar, "70%", "60%", "160px");
     
-    const dialogue = data.dateDialogue;
     let index = 0;
+    dialogueBox.style.display = "block";
+    dialogueBox.innerText = data.dateDialogue[index];
+
+    // if day >= 4, then player has limited dialogue options to showcase memory loss
+    // they can still see what they could have said, just can't click
+    const lockedOnLateDays = day >= 4;
     
-    showDialogue(dialogue[index]);
+    // set of data choices that are locked after or during day 4
+    const dataChoices = [
+        { text: "Say I remember you", result: "You try to say it but no words come out.", availableFromDay: 1 },
+        { text: "Ask about us", result: "They look pained as though he wants to avoid the topic. He speaks slowly.", availableFromDay: 1 }
+    ];
 
-    nextButton.onclick = () => {
-        decreaseMemory(20);
-
+if (lockedOnLateDays) {
+    // show the locked choices visually but disable them from being selected
+    showChoices(dataChoices.map(c => ({...c, availableFromDay: day + 1})), day, null);    
+    dialogueBox.innerText = data.dateDialogue.join(" ");
+    nextButton.disabled = false;
+    setNextHandler(() => {
+        // memory penalty for inability to engage properly
+        setMemory(memory - 15);
+        if (day < 5) {
+            currentDay = day + 1;
+            advanceTime(60 * 12); // advance to next day
+            sceneRoom(currentDay);
+        } else {
+            reflectionScreen();
+        }
+    });
+} else {
+    // normal interactive date scene with choices
+    showChoices(dataChoices, day, (choice) => {
+        dialogueBox.innerText = choice.result;
+        setMemory(memory - 10); // memory penalty for engaging but not fully remembering
+        nextButton.disabled = false;
+        setNextHandler(() => {
+            if (day < 5) {
+                currentDay = day + 1;
+                advanceTime(60 * 12);
+                sceneRoom(currentDay);
+            } else {
+                reflectionScreen();
+            }
+        });
+    });
+    
+    // ALSO the player is allowed to skip through the date dialogye
+    nextButton.disabled = false;
+    setNextHandler(() => {
+        setMemory(memory - 20);
         index++;
-        if (index < dialogue.length) {
-            showDialogue(dialogue[index]);
+        if (index < data.dateDialogue.length) {
+            dialogueBox.innerText = data.dateDialogue[index];
         } else {
             if (day < 5) {
-                day++;
-                sceneRoom(day);
+                currentDay = day + 1;
+                advanceTime(60 * 12);
+                sceneRoom(currentDay);
             } else {
                 reflectionScreen();
             }
         }
-    };
-}
+    });
 
 // ------------------
 // REFLECTION SCREEN
