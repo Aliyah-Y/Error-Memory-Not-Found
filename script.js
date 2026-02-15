@@ -159,9 +159,103 @@ const gameData = {
     },
 }
 
+// ----------------------------------------
+// UTILITY FUNCTIONS + SIMPLIFYING COMMANDS
+// ----------------------------------------
 
+function setBackground(src) {
+    background.src = src || "";
+}
 
+function setMemory(value) {
+    memory = Math.max(0, Math.min(100, value));
+    memoryBar.style.width = memory + "%";
+    memoryPercent.innerText = memory + "%";
+    if (memory > 60) {
+        memoryBar.style.background = "linear-gradient(90deg, #5cc186, #255e2e)";
+    } else if (memory > 30) {
+        memoryBar.style.background = "linear-gradient(90deg, #eaf044, #cf8918)";
+    } else {
+        memoryBar.style.background = "linear-gradient(90deg, #e74c3c, #4f1a14)";
+    }
+}
 
+function minutestoHHMM(minutes) {
+    const h = Math.floor(minutes / 60) % 24;
+    const m = minutes % 60;
+    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+}
+
+function advanceTime(minutes) {
+    gameTimeMinutes += minutes;
+    timeLabel.innerText = minutestoHHMM(gameTimeMinutes);
+}
+
+function clearLayer() {
+    layer.innerHTML = "";
+    dialogueBox.innerHTML = "none";
+    choicesWrap.innerHTML = "none";
+    nextButton.disabled = true;
+    nextButton.style.display = "inline-block";
+}
+
+// ----------------------------
+// COUNTDOWN TIMER (3, 2, 1...)
+// ----------------------------
+
+function startCountdown(seconds, onTick, onEnd) {
+    clearCountdown();
+    if (!seconds || seconds <= 0) {
+        countdownEL.innerText = "0";
+        onEnd && onEnd();
+        return;
+    }
+    let s = seconds;
+    countdownEL.innerText = s;
+    timerId = setInterval(() => {
+        s--;
+        countdownEL.innerText = s;
+        onTick && onTick(s);
+        if (s <= 0) {
+            clearCountdown();
+            onEnd && onEnd();
+        }
+    }, 1000);
+}
+
+function clearCountdown() {
+    if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+    }
+}
+
+// ----------------------------------------
+// MAKE THE STICKY NOTES APPEAR IN THE ROOM
+// ----------------------------------------
+
+function createSticky(noteData, stickyImg, onReveal) {
+    const el = document.createElement("div");
+    el.className = "sticky";
+    el.style.left = noteData.x;
+    el.style.top = noteData.y;
+    if (noteData.w) el.style.width = noteData.w;
+    if (noteData.h) el.style.height = noteData.h;
+
+    // using the sticky image to cover the text before revealing
+    if (stickyImg) {
+        
+        el.classel.
+        style.backgroundImage = `url(${stickyImg})`;
+    
+    layer.appendChild(el);
+
+    el.onclick = () => {
+        el.innerText = noteData.text;
+        onReveal && onReveal();
+    };
+}
+}
 
 
 
@@ -187,9 +281,12 @@ function decreaseMemory(amount) {
     }
 }
 
-// -----------------------------------
+
+// ------------
+// SCENES! :)
+// ------------
+
 // SCENE 1 - ROOM
-// -----------------------------------
 
 function sceneRoom(day) {
     background.src = "assets/day-1/room-bg-1.png";
@@ -230,9 +327,7 @@ function sceneRoom(day) {
     });
 }
 
-// -----------------------------------
-// SCENE 2 - FRIENDS
-// -----------------------------------
+// SCENE 2 - FRIENDS / SCHOOL
 
 function sceneFriends(day) {
     background.src = "assets/day-1/school-bg-1.png";
@@ -254,9 +349,7 @@ function sceneFriends(day) {
     };
 }
 
-// -----------------------------------
 // SCENE 3 - DATE + MEMORY DECREASE
-// -----------------------------------
 
 function sceneDate(day) {
     background.src = "assets/day-1/date-bg-1.png";
