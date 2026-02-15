@@ -168,7 +168,7 @@ body {
 .sticky:active{
     transform:translateY(2px) scale(0.995)
 }
-.sticky.img {
+.sticky-img {
     background-size:cover;
     background-position:center;
     color:transparent;

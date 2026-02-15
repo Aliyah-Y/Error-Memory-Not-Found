@@ -567,22 +567,18 @@ function finalPage() {
 // -----------------
 // RESTART THE GAME
 // -----------------
-function init() {
-    const sb = document.getElementById('start-button');
-    if (!sb) {
-        document.addEventListener('DOMContentLoaded', init);
-        return;
-    }
-    sb.addEventListener('click', () => {
-        homeScreen.style.display = "none";
-        gameRoot.style.display = "block";
-        currentDay = 1;
-        setMemory(100);
-        gameTimeMinutes = 8 * 60; // reset to 8:00 AM
-        dayLabel.innerText = "Day " + currentDay;
-        timeLabel.innerText = minutestoHHMM(gameTimeMinutes);
-        sceneRoom(currentDay);
-    });
-}
+startButton.addEventListener("click", startGame);
 
-init();
+function startGame() {
+    homeScreen.style.display = "none";
+    gameRoot.style.display = "block";
+
+    currentDay = 1;
+    setMemory(100);
+    gameTimeMinutes = 8 * 60;
+
+    dayLabel.innerText = "Day " + currentDay;
+    timeLabel.innerText = minutestoHHMM(gameTimeMinutes);
+
+    sceneRoom(currentDay);
+}
