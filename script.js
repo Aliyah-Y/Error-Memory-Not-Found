@@ -471,6 +471,7 @@ function sceneRoom(day) {
     timeLabel.innerText = minutestoHHMM(gameTimeMinutes);
 }
 
+
 // SCENE 2 - FRIENDS / SCHOOL
     function sceneFriends(day) {
     currentScene = 2;
@@ -495,8 +496,6 @@ function sceneRoom(day) {
      });
     });
 
-    
-
     // place friend character 
     addCharacter(data.friendCharacter, "85%", "85%", "160px");
 
@@ -505,8 +504,7 @@ function sceneRoom(day) {
     dialogueBox.innerText = data.friendsDialogue[index] || "";
 
     // show choices (always enabled; no locking)
-    if (data.choices && data.choices.length) {
-        showChoices(data.choices, day, (choice) => {
+    showChoices(data.choices, day, (choice) => {
         dialogueBox.innerText = choice.result;
         unlockNext(() => {
             advanceTime(45);
@@ -514,9 +512,6 @@ function sceneRoom(day) {
         });
         });
     }
-}
-
-
 
 // SCENE 3 - DATE + MEMORY DECREASE
     function sceneDate(day) {
@@ -545,7 +540,6 @@ function sceneRoom(day) {
     });
 });
 
-
     // place date character with sensible coordinates so it stays on screen
     addCharacter(data.dateCharacter, "70%", "85%", "160px");
 
@@ -569,7 +563,6 @@ function sceneRoom(day) {
         });
     });
 }
-    
 
 // ------------------
 // REFLECTION SCREEN
@@ -602,6 +595,7 @@ function finalPage() {
     <p>What does it mean to truly know someone? Is it the memories you share, or something deeper?</p>
     <p>As you lose yourself in the haze of forgotten moments, you find solace in the fleeting connections that still linger in your heart.</p>
     `;
+    unlockNext(homeScreen);
 }
 
 // -----------------
