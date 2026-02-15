@@ -169,7 +169,14 @@ function setBackground(src) {
 
 function setMemory(value) {
     memory = Math.max(0, Math.min(100, value));
-    memoryBar.style.width = memory + "%";
+    // determine the max pixel width for the bar (cache on the element)
+    if (!memoryBar.dataset.maxWidth) {
+        const cs = getComputedStyle(memoryBar);
+        // cs.width returns px value like '220px'
+        memoryBar.dataset.maxWidth = parseFloat(cs.width) || 220;
+    }
+    const maxW = parseFloat(memoryBar.dataset.maxWidth);
+    memoryBar.style.width = (maxW * (memory / 100)) + "px";
     memoryPercent.innerText = memory + "%";
     if (memory > 60) {
         memoryBar.style.background = "linear-gradient(90deg, #5cc186, #255e2e)";
@@ -560,13 +567,22 @@ function finalPage() {
 // -----------------
 // RESTART THE GAME
 // -----------------
-startButton.addEventListener("click", () => {
-    homeScreen.style.display = "none";
-    gameRoot.style.display = "block";
-    currentDay = 1;
-    setMemory(100);
-    gameTimeMinutes = 8 * 60; // reset to 8:00 AM
-    dayLabel.innerText = "Day " + currentDay;
-    timeLabel.innerText = minutestoHHMM(gameTimeMinutes);
-    sceneRoom(currentDay);
-});
+function init() {
+    const sb = document.getElementById('start-button');
+    if (!sb) {
+        document.addEventListener('DOMContentLoaded', init);
+        return;
+    }
+    sb.addEventListener('click', () => {
+        homeScreen.style.display = "none";
+        gameRoot.style.display = "block";
+        currentDay = 1;
+        setMemory(100);
+        gameTimeMinutes = 8 * 60; // reset to 8:00 AM
+        dayLabel.innerText = "Day " + currentDay;
+        timeLabel.innerText = minutestoHHMM(gameTimeMinutes);
+        sceneRoom(currentDay);
+    });
+}
+
+init();
