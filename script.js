@@ -364,23 +364,53 @@ function sceneFriends(day) {
     currentScene = 2;
     const data = gameData[day];
     setBackground(data.bgFriends);
-    layer.innerHTML = "";
-    nextButton.style.display = "block";
+    clearLayer();
+    clearCountdown();
 
-    const dialogue = gameData[day].friendsDialogue;
+    // add the friend avatar to the screen
+    addAvatar(data.friendAvatar, "20%", "60%", "160px");
+
     let index = 0;
-    
-    showDialogue(dialogue[index]);
+    dialogueBox.style.display = "block";
+    dialogueBox.innerHTML = data.friendsDialogue[index];
 
-    nextButton.onclick = () => {
-        index++;
-        if (index < dialogue.length) {
-            showDialogue(dialogue[index]);
-        } else {
-            sceneDate(day);
-        }
-    };
-}
+    // show choices 
+    // (some are locked because of the availability from day # 
+        // -- showcase memory loss)
+
+    if (data.choices && data.choices.length) {
+        showChoices(data.choices, day, (choice) => {
+            dialogueBox.innerText = choice.result;
+            nextButton.disabled = false;
+            setNextHandler(() => {
+                advanceTime(45);
+                sceneDate(day);
+            });
+        });
+
+        // allowing the player to click next without choosing anything, b/c they didn't choose in time\
+        nextButton.disabled = false;
+        setNextHandler(() => {
+            index++;
+            if (index < data.friendsDialogue.length) {
+                dialogueBox.innerText = data.friendsDialogue[index];
+            } else { 
+                advanceTime(45);
+                sceneDate(day);
+            }
+        });
+    } else {
+        nextButton.disabled = false;
+        setNextHandler(() => {
+            index++;
+            if (index < data.friendsDialogue.length) {
+                dialogueBox.innerText = data.friendsDialogue[index];
+            } else {
+                advanceTime(45);
+                sceneDate(day);
+            }
+        });
+    }
 
 // SCENE 3 - DATE + MEMORY DECREASE
 
@@ -388,9 +418,10 @@ function sceneDate(day) {
     currentScene = 3;
     const data = gameData[day];
     setBackground(data.bgDate);
-    layer.innerHTML = "";
-    nextButton.style.display = "block";
+    clearLayer();
+    clearCountdown();
 
+    
     const dialogue = data.dateDialogue;
     let index = 0;
     
